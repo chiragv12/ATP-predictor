@@ -17,8 +17,9 @@ def load_matches(raw_dir=RAW_DIR):
     df = df.sort_values(["tourney_date", "tourney_id", "match_num"]).reset_index(drop=True)
     # Elo/form need every match; models can filter on these later.
     score = df["score"].fillna("")
-    df["walkover"] = score.str.contains("W/O")
-    df["retired"] = score.str.contains("RET|DEF")
+    # Spelling varies across years: "W/O"/"Walkover", "RET"/"DEF"/"Def."/"Default"/"ABD"/"Played and abandoned".
+    df["walkover"] = score.str.contains("W/O|walkover", case=False)
+    df["retired"] = score.str.contains("RET|DEF|ABD|abandoned", case=False)
     return df
 
 
