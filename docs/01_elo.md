@@ -64,15 +64,15 @@ Jannik Sinner beat Daniil Medvedev 3-6 3-6 6-4 6-4 6-3. Ratings going in (from t
 
 | | Sinner | Medvedev |
 |---|---:|---:|
-| Pre-match Elo | 2222.3 | 2136.6 |
+| Pre-match Elo | 2223.2 | 2136.2 |
 | Matches played before | 270 | 473 |
 | K | 26.4 | 21.2 |
 
-1. **Expected:** gap = 2222.3 − 2136.6 = 85.7 → `1 / (1 + 10 ** (−85.7/400))` = **0.621**. Sinner was a 62% favourite.
-2. **Sinner (won):** 2222.3 + 26.4 × (1 − 0.621) = 2222.3 + **10.0** = **2232.3**
-3. **Medvedev (lost):** 2136.6 + 21.2 × (0 − 0.379) = 2136.6 − **8.0** = **2128.6**
+1. **Expected:** gap = 2223.2 − 2136.2 = 87.0 → `1 / (1 + 10 ** (−87.0/400))` = **0.623**. Sinner was a 62% favourite.
+2. **Sinner (won):** 2223.2 + 26.4 × (1 − 0.623) = 2223.2 + **10.0** = **2233.2**
+3. **Medvedev (lost):** 2136.2 + 21.2 × (0 − 0.377) = 2136.2 − **8.0** = **2128.2**
 
-The code agrees: Sinner's next match (Rotterdam) starts at 2232.3 and Medvedev's (Dubai) at 2128.6.
+The code agrees: Sinner's next match (Rotterdam) starts at 2233.2 and Medvedev's (Dubai) at 2128.2.
 
 Compare an **upset**: in the 2025 Roland Garros final Alcaraz (2221) beat Sinner (2335), with Elo giving Alcaraz only
 34%. Same formula, but now the winner's multiplier is 0.66 instead of 0.38: Alcaraz (K = 25.2) gained **16.6** points,
@@ -86,10 +86,10 @@ versus Sinner's 10.0 for his expected win above.
 | 2020 | 31 | 1792 | 1951 | 1951 |
 | 2021 | 72 | 1969 | 2034 | 1976 |
 | 2022 | 64 | 1988 | 2076 | 2008 |
-| 2023 | 84 | 1982 | 2185 | 2185 |
-| 2024 | 81 | 2190 | 2311 | 2311 |
-| 2025 | 64 | 2312 | 2339 | 2333 |
-| 2026* | 40 | 2343 | 2375 | 2375 |
+| 2023 | 84 | 1982 | 2186 | 2186 |
+| 2024 | 81 | 2191 | 2311 | 2311 |
+| 2025 | 64 | 2312 | 2339 | 2334 |
+| 2026* | 40 | 2343 | 2376 | 2376 |
 
 \* through Roland Garros. All values are **pre-match** ratings, so "end" is the rating going into his last match of the year;
 the next year's "start" already includes that last result (e.g. 2019 → 2020 jumps 1741 → 1792 because he won his final 2019 match).
@@ -99,7 +99,7 @@ the next year's "start" already includes that last result (e.g. 2019 → 2020 ju
 - **2023–24:** the breakthrough. +300 over two seasons, ending 2024 as the top-rated player.
 - **2025–26:** small changes despite winning big titles — he's expected to win now, and K is small after 400+ matches.
 
-As of May 2026 the top of the table is Sinner (2375), Alcaraz (2283), Djokovic (2171) — sensible.
+As of May 2026 the top of the table is Sinner (2376), Alcaraz (2283), Djokovic (2171) — sensible.
 Federer and Nadal also still appear high: a retired player's rating simply freezes at their last match.
 
 ## Surface Elo
@@ -110,7 +110,7 @@ Grass has the fewest matches (~10% of the data), so grass ratings are the noisie
 
 ## Why it's leakage-safe
 
-The code walks through matches in chronological order and, for each one:
+The code walks through matches in chronological order (by date, then by round within a tournament, since every match in an event shares one start date) and, for each one:
 
 1. **reads** both players' current ratings and stores them as that match's feature, *then*
 2. **updates** the ratings using the result.

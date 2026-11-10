@@ -47,7 +47,9 @@ def compute_elo_ratings(df):
 
 def compute_surface_elo_ratings(df):
     """Pre-match Elo counting only matches on the same surface."""
-    known = df["surface"].notna()
-    w = [(p, s) if k else None for p, s, k in zip(df["winner_id"], df["surface"], known)]
-    l = [(p, s) if k else None for p, s, k in zip(df["loser_id"], df["surface"], known)]
+    # Carpet (66 matches, all Davis Cup ties) is too rare for its own rating; it's a fast indoor court, so count it as Hard.
+    surface = df["surface"].replace({"Carpet": "Hard"})
+    known = surface.notna()
+    w = [(p, s) if k else None for p, s, k in zip(df["winner_id"], surface, known)]
+    l = [(p, s) if k else None for p, s, k in zip(df["loser_id"], surface, known)]
     return _elo_pass(df, w, l).rename(columns=lambda c: c.replace("_elo", "_surface_elo"))

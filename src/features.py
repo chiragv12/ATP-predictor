@@ -9,6 +9,13 @@ from elo import compute_elo_ratings, compute_surface_elo_ratings
 
 UNRANKED = 2000  # stand-in rank for unranked players (see notebook 01, section 4)
 
+# The ONLY columns a model may use as inputs. Everything else in the table is ids, names, the label, or outcome flags.
+NUMERIC_FEATURES = ["log_rank_diff", "rank_points_diff", "elo_diff", "surface_elo_diff", "form_diff", "h2h_diff"]
+CATEGORICAL_FEATURES = ["surface", "tourney_level", "round", "best_of"]
+MODEL_INPUTS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+# walkover / retired describe how the match ENDED: use them to choose which rows to train on, never as inputs.
+OUTCOME_FLAGS = ["walkover", "retired"]
+
 
 def add_recent_form(df, n=10):
     """winner_form / loser_form: win rate over each player's previous n played matches (NaN if none yet).
@@ -63,8 +70,7 @@ def build_feature_table(df):
         w, l = df[winner_col].to_numpy(), df[loser_col].to_numpy()
         return np.where(flip, l, w), np.where(flip, w, l)
 
-    out = df[["tourney_id", "tourney_name", "tourney_date", "match_num", "surface", "tourney_level",
-              "round", "best_of", "walkover", "retired"]].copy()
+    out = df[["tourney_id", "tourney_name", "tourney_date", "match_num", *CATEGORICAL_FEATURES, *OUTCOME_FLAGS]].copy()
     out["p1_id"], out["p2_id"] = side("winner_id", "loser_id")
     out["p1_name"], out["p2_name"] = side("winner_name", "loser_name")
     out["p1_won"] = (~flip).astype(int)
