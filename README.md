@@ -7,6 +7,14 @@ ATP Match Predictor
 pipenv install
 ```
 
+### Notebooks
+
+```bash
+pipenv run jupyter lab
+```
+
+Then open `notebooks/` and run them in order (`01_eda.ipynb`, ...). Each notebook imports from `src/`.
+
 ### Data
 
 Match data is Jeff Sackmann's ATP dataset (CC BY-NC-SA 4.0). The original `JeffSackmann/tennis_atp`
